@@ -1094,7 +1094,7 @@
             submitBtn.disabled = true;
 
             try {
-                // ১. চেক করা যে এই TrxID ইতিমধ্যে ব্যবহার করা হয়েছে কি না (Firestore-এ)
+                // ১. চেক করা যে এই TrxID ইতিমধ্যে ব্যবহার করা হয়েছে কি না
                 const qCheck = query(collection(db, "addBalanceRequests"), where("trxId", "==", trxIdInput), where("status", "==", "Approved"));
                 const checkSnap = await getDocs(qCheck);
                 if(!checkSnap.empty) {
@@ -1122,15 +1122,20 @@
 
                 submitBtn.innerText = "Scanning Image...";
 
-                // ৩. Tesseract.js দিয়ে স্ক্রিনশট থেকে টেক্সট রিড করা (OCR)
+                // ৩. সঠিক নিয়মে Tesseract.js ওয়ার্কার তৈরি ও টেক্সট রিড করা (OCR)
                 const worker = await Tesseract.createWorker('eng');
                 const ret = await worker.recognize(imageInput);
                 await worker.terminate();
 
-                const extractedText = ret.data.text.toLowerCase();
+                const extractedText = ret.data.text.toLowerCase().replace(/[\s\-_]/g, '');
+                const cleanTrxInput = trxIdInput.toLowerCase().replace(/[\s\-_]/g, '');
 
-                const isTrxFound = extractedText.includes(trxIdInput.toLowerCase());
-                const isAmountFound = extractedText.includes(amountInput.toString());
+                // ফ্লেক্সিবল ম্যাচিং (O এবং 0 এর ভুল এড়ানোর জন্য)
+                const isTrxFound = extractedText.includes(cleanTrxInput) || 
+                                   extractedText.includes(cleanTrxInput.replace(/o/g, '0')) ||
+                                   extractedText.includes(cleanTrxInput.replace(/0/g, 'o'));
+
+                const isAmountFound = ret.data.text.includes(amountInput.toString());
 
                 if (!isTrxFound || !isAmountFound) {
                     alert("স্ক্রিনশটের সাথে TrxID বা Amount এর মিল পাওয়া যায়নি! সঠিক স্ক্রিনশট ও তথ্য দিন।");
@@ -1146,7 +1151,7 @@
 
                 await updateDoc(userRef, { balance: currentBal + amountInput });
 
-                // ৫. রিকুয়েস্ট সফল হিসেবে সংরক্ষণ (যাতে ভবিষ্যতে ডুপ্লিকেট রোধ করা যায়)
+                // ৫. রিকুয়েস্ট সফল হিসেবে সংরক্ষণ
                 await addDoc(collection(db, "addBalanceRequests"), {
                     userId: auth.currentUser.uid, 
                     email: auth.currentUser.email,
