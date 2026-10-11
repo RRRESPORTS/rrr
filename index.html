@@ -1093,8 +1093,10 @@
             const submitBtn = document.getElementById('submitAddBalBtn');
             submitBtn.disabled = true;
 
+            let worker = null;
+
             try {
-                // ১. চেক করা যে এই TrxID ইতিমধ্যে ব্যবহার করা হয়েছে কি না
+                // ১. ডুপ্লিকেট TrxID চেক
                 const qCheck = query(collection(db, "addBalanceRequests"), where("trxId", "==", trxIdInput), where("status", "==", "Approved"));
                 const checkSnap = await getDocs(qCheck);
                 if(!checkSnap.empty) {
@@ -1104,7 +1106,7 @@
                     return;
                 }
 
-                // ২. ৫ সেকেন্ড কাউন্টডাউন শুরু
+                // ২. ৫ সেকেন্ড কাউন্টডাউন
                 let countdown = 5;
                 submitBtn.innerText = `Checking Screenshot (${countdown}s)...`;
                 
@@ -1122,10 +1124,9 @@
 
                 submitBtn.innerText = "Scanning Image...";
 
-                // ৩. সঠিক নিয়মে Tesseract.js ওয়ার্কার তৈরি ও টেক্সট রিড করা (OCR)
-                const worker = await Tesseract.createWorker('eng');
+                // ৩. Tesseract OCR রিড ও ওয়ার্কার হ্যান্ডলিং
+                worker = await Tesseract.createWorker('eng');
                 const ret = await worker.recognize(imageInput);
-                await worker.terminate();
 
                 const extractedText = ret.data.text.toLowerCase().replace(/[\s\-_]/g, '');
                 const cleanTrxInput = trxIdInput.toLowerCase().replace(/[\s\-_]/g, '');
@@ -1170,6 +1171,9 @@
             } catch(e) { 
                 alert("Error: " + e.message); 
             } finally {
+                if(worker) {
+                    await worker.terminate(); // মেমোরি ফ্রী করা যাতে পরবর্তীতে বারবার কাজ করে
+                }
                 submitBtn.innerText = "Submit Request";
                 submitBtn.disabled = false;
             }
