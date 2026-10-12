@@ -115,7 +115,7 @@
 
             <div class="dash-card" onclick="openCardSection('cardUserBalance')">
                 <h3>Add User Balance</h3>
-                <p>ইউজারের UID দিয়ে Main ও Win ব্যালেন্স আপডেট করুন</p>
+                <p>ইউজারের UID দিয়ে আলাদাভাবে Win বা Main ব্যালেন্স যোগ/কাটুন</p>
             </div>
 
             <div class="dash-card" onclick="openCardSection('cardSearchUser')">
@@ -274,14 +274,22 @@
             <div class="list-container" id="withdrawRequestsList"><p style="color: var(--text-muted); text-align: center;">Loading...</p></div>
         </div>
 
+        <!-- Add User Balance Section with 2 Categories -->
         <div id="cardUserBalance" class="admin-section">
             <div class="section-header">
                 <h3>Add User Balance</h3>
                 <button class="back-btn" onclick="goBackHome()">← Back</button>
             </div>
+            
+            <label style="font-size: 13px; color: var(--neon-cyan); display: block; margin-top: 5px;">Select Balance Type:</label>
+            <select id="balanceTypeSelect" class="form-control">
+                <option value="win">Add Win Balance (শুধুমাত্র উইন ব্যালেন্স)</option>
+                <option value="main">Add Main Balance (শুধুমাত্র মেইন ব্যালেন্স)</option>
+            </select>
+
             <input type="text" id="targetUserUID" class="form-control" placeholder="Enter User Game UID">
             <input type="number" id="bonusAmount" class="form-control" placeholder="Amount (৳) [Use minus for cut e.g. +500 or -500]">
-            <button class="admin-btn" onclick="modifyUserBalance()">Update Balance (Main & Win)</button>
+            <button class="admin-btn" onclick="modifyUserBalance()">Update Balance</button>
         </div>
 
         <div id="cardSearchUser" class="admin-section">
@@ -525,6 +533,8 @@
         window.modifyUserBalance = async function() {
             const uid = document.getElementById("targetUserUID").value.trim();
             const amount = Number(document.getElementById("bonusAmount").value);
+            const balanceType = document.getElementById("balanceTypeSelect").value;
+
             if(!uid || isNaN(amount)) { alert("সঠিক UID এবং অ্যামাউন্ট দিন।"); return; }
 
             try {
@@ -534,15 +544,19 @@
 
                 let userDocRef = snap.docs[0].ref;
                 let userData = snap.docs[0].data();
-                let currentMain = Number(userData.balance || 0);
-                let currentWin = Number(userData.winBalance || 0);
 
-                await updateDoc(userDocRef, { 
-                    balance: currentMain + amount,
-                    winBalance: currentWin + amount
-                });
+                if(balanceType === 'win') {
+                    let currentWin = Number(userData.winBalance || 0);
+                    let newWin = currentWin + amount;
+                    await updateDoc(userDocRef, { winBalance: newWin });
+                    alert(`সফলভাবে Win Balance আপডেট করা হয়েছে!\nনতুন Win Balance: ৳${newWin}`);
+                } else {
+                    let currentMain = Number(userData.balance || 0);
+                    let newMain = currentMain + amount;
+                    await updateDoc(userDocRef, { balance: newMain });
+                    alert(`সফলভাবে Main Balance আপডেট করা হয়েছে!\nনতুন Main Balance: ৳${newMain}`);
+                }
 
-                alert(`সফলভাবে Main ও Win ব্যালেন্স আপডেট করা হয়েছে!\nনতুন Main Balance: ৳${currentMain + amount}\nনতুন Win Balance: ৳${currentWin + amount}`);
                 document.getElementById("targetUserUID").value = "";
                 document.getElementById("bonusAmount").value = "";
             } catch(e) { alert("Error: " + e.message); }
