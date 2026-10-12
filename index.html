@@ -38,10 +38,10 @@
         .notice-content { color: var(--neon-cyan); font-size: 13px; display: inline-block; animation: marquee 15s linear infinite; }
         @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
-        .balance-container { background: linear-gradient(135deg, #161d2d, #0d121f); margin: 15px; padding: 20px; border-radius: 12px; border: 1px solid rgba(255,30,66,0.3); display: flex; justify-content: space-between; align-items: center; box-shadow: 0 0 15px rgba(0,0,0,0.5); }
-        .bal-info h4 { color: var(--text-muted); font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .bal-info h2 { color: var(--neon-cyan); font-size: 24px; font-weight: bold; text-shadow: 0 0 10px rgba(0,243,255,0.3); }
-        .bal-btns button { padding: 8px 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-left: 5px; }
+        .balance-container { background: linear-gradient(135deg, #161d2d, #0d121f); margin: 15px; padding: 15px; border-radius: 12px; border: 1px solid rgba(255,30,66,0.3); display: flex; justify-content: space-between; align-items: center; box-shadow: 0 0 15px rgba(0,0,0,0.5); }
+        .bal-info h4 { color: var(--text-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .bal-info h2 { font-size: 18px; font-weight: bold; }
+        .bal-btns button { padding: 8px 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-left: 4px; font-size: 12px; }
         .btn-add { background: var(--neon-orange); color: #000; }
         .btn-withdraw { background: var(--neon-red); color: #fff; }
 
@@ -136,10 +136,15 @@
         <div class="notice-content" id="noticeTextDisplay">Loading notice...</div>
     </div>
 
+    <!-- Main Balance & Win Balance Container -->
     <div class="balance-container">
-        <div class="bal-info">
-            <h4>Total Balance</h4>
-            <h2 id="userBalance">৳0.00</h2>
+        <div class="bal-info" style="border-right: 1px solid rgba(255,255,255,0.1); padding-right: 12px;">
+            <h4>Main Balance</h4>
+            <h2 id="userBalance" style="color: var(--neon-cyan);">৳0.00</h2>
+        </div>
+        <div class="bal-info" style="padding-left: 10px;">
+            <h4>Win Balance</h4>
+            <h2 id="userWinBalance" style="color: var(--neon-green);">৳0.00</h2>
         </div>
         <div class="bal-btns">
             <button class="btn-add" id="navAddBalBtn">Add Balance</button>
@@ -232,7 +237,13 @@
         </div>
 
         <div id="withdrawSection" class="section">
-            <h3 style="color: var(--neon-red);">Withdraw Funds</h3>
+            <h3 style="color: var(--neon-red);">Withdraw Funds (From Win Balance)</h3>
+            
+            <!-- Added Requested Notice inside Withdraw Section -->
+            <div style="background: linear-gradient(135deg, #1f1115, #0d121f); border: 1px solid var(--neon-orange); padding: 12px; border-radius: 8px; margin: 10px 0; font-size: 13px; color: var(--neon-cyan);">
+                ⚜️ রাত ১২ টার আগে সবার পেমেন্ট কমপ্লিট করা হবে।
+            </div>
+
             <p style="font-size: 13px; color: var(--text-muted); margin: 5px 0;">শুধু বিকাশ পার্সোনাল নাম্বার।</p>
             <p style="font-size: 12px; color: var(--neon-orange); margin-bottom: 5px;">Limit: Minimum ৳30 - Maximum ৳200</p>
             <div style="background: var(--card-bg); padding: 15px; border-radius: 8px; border: 1px solid #1f2937; margin-top: 10px;">
@@ -242,16 +253,6 @@
             </div>
             <h4 style="margin-top: 15px; color: var(--neon-cyan); font-size: 14px;">Withdraw History & Status</h4>
             <div class="history-list" id="withdrawHistory"><p style="color: var(--text-muted); font-size: 12px;">No requests found.</p></div>
-        </div>
-
-        <div id="supportMailSection" class="section">
-            <h3 style="color: var(--neon-cyan); margin-bottom: 10px;">💬 WhatsApp Support</h3>
-            <div style="background: var(--card-bg); padding: 15px; border-radius: 8px; border: 1px solid #1f2937;">
-                <input type="text" id="supportGameName" class="form-control" placeholder="Game ID Name">
-                <input type="text" id="supportGameUID" class="form-control" placeholder="Game UID">
-                <textarea id="supportCommentMsg" class="form-control" placeholder="মন্তব্য (আপনার সমস্যা বা কথা এখানে লিখুন)..." rows="3"></textarea>
-                <button class="submit-btn" id="sendWhatsAppMsgBtn" style="background: #25d366; color: #fff;">Send Message on WhatsApp</button>
-            </div>
         </div>
     </div>
 
@@ -345,7 +346,6 @@
             <li id="menuAddBal">Add Balance</li>
             <li id="menuWithdraw">Withdraw</li>
             <li id="menuGift" style="color: var(--neon-red); font-weight: bold;">🎁 Gift Code</li>
-            <li id="menuSupportMail" style="color: var(--neon-cyan);">💬 Support WhatsApp</li>
             <li id="drawerAuthItem">Login / Register</li>
             <li style="border-top: 1px solid rgba(255,255,255,0.1); margin-top: 10px; padding-top: 12px; color: var(--neon-cyan);">
                 <strong>সহায়তা কেন্দ্র</strong><br>
@@ -359,7 +359,7 @@
     <div class="bottom-nav">
         <div class="nav-item active" id="navHome"><div>🏠</div>Home</div>
         <div class="nav-item" id="navMyMatch"><div>🎮</div>My Match</div>
-        <div class="nav-item" id="navSupport"><div>💬</div>Support</div>
+        <div class="nav-item" id="navSupport" onclick="window.open('https://wa.me/8801902009133', '_blank')"><div>💬</div>Support</div>
         <div class="nav-item" id="navProfile"><div>👤</div>Profile</div>
     </div>
 
@@ -425,10 +425,6 @@
             if(tabId === 'giftCodeSection') { document.getElementById('giftCodeSection').classList.add('active'); }
             if(tabId === 'addBalance') { document.getElementById('addBalanceSection').classList.add('active'); loadUserHistory(); }
             if(tabId === 'withdraw') { document.getElementById('withdrawSection').classList.add('active'); loadUserHistory(); }
-            if(tabId === 'supportMailSection') { 
-                document.getElementById('supportMailSection').classList.add('active'); 
-                document.getElementById('navSupport').classList.add('active');
-            }
         }
 
         function toggleDrawer() { document.getElementById('sideDrawer').classList.toggle('open'); }
@@ -470,7 +466,7 @@
 
                     const cred = await createUserWithEmailAndPassword(auth, email, password);
                     await setDoc(doc(db, "users", cred.user.uid), { 
-                        email: email, balance: 0.00, playerName: playerName, playerUID: playerUID 
+                        email: email, balance: 0.00, winBalance: 0.00, playerName: playerName, playerUID: playerUID 
                     });
                     alert("Account Created & Saved!");
                     closeAuthModal();
@@ -552,23 +548,6 @@
             } catch(e) { alert("Error: " + e.message); }
         }
 
-        function sendWhatsAppMessage() {
-            const gameName = document.getElementById('supportGameName').value.trim();
-            const gameUID = document.getElementById('supportGameUID').value.trim();
-            const comment = document.getElementById('supportCommentMsg').value.trim();
-
-            if(!gameName || !gameUID || !comment) {
-                alert("দয়া করে Game ID Name, Game UID এবং মন্তব্য সব ফিল্ড পূরণ করুন!");
-                return;
-            }
-
-            const message = `*Support Message - RRR ESPORTS*\n\n*Game ID Name:* ${gameName}\n*Game UID:* ${gameUID}\n*মন্তব্য:* ${comment}`;
-            const encodedMessage = encodeURIComponent(message);
-            const whatsappUrl = `https://wa.me/8801902009133?text=${encodedMessage}`;
-
-            window.open(whatsappUrl, '_blank');
-        }
-
         onSnapshot(doc(db, "settings", "notice"), (docSnap) => {
             const noticeBar = document.getElementById('noticeBarContainer');
             const noticeText = document.getElementById('noticeTextDisplay');
@@ -600,16 +579,10 @@
                     if(docSnap.exists()) {
                         const data = docSnap.data();
                         document.getElementById('userBalance').innerText = `৳${data.balance || 0.00}`;
+                        document.getElementById('userWinBalance').innerText = `৳${data.winBalance || 0.00}`;
                         document.getElementById('profileEmail').innerText = data.email || user.email;
                         document.getElementById('profileGameName').innerText = data.playerName || "-";
                         document.getElementById('profileGameUID').innerText = data.playerUID || "-";
-                        
-                        if(document.getElementById('supportGameName').value === "") {
-                            document.getElementById('supportGameName').value = data.playerName || "";
-                        }
-                        if(document.getElementById('supportGameUID').value === "") {
-                            document.getElementById('supportGameUID').value = data.playerUID || "";
-                        }
                     }
                 });
 
@@ -631,6 +604,7 @@
                 drawerAuthItem.innerText = "Login / Register"; 
                 drawerAuthItem.onclick = openAuthModal;
                 document.getElementById('userBalance').innerText = "৳0.00";
+                document.getElementById('userWinBalance').innerText = "৳0.00";
                 loadWebMatches();
                 loadMyMatches();
                 openAuthModal();
@@ -928,7 +902,7 @@
                 const userBal = Number(userSnap.data().balance || 0);
 
                 if(userBal < selectedMatchForJoin.fee) {
-                    alert("আপনার অ্যাকাউন্টে পর্যাপ্ত ব্যালেন্স নেই! দয়া করে Add Balance করুন।");
+                    alert("আপনার মেইন অ্যাকাউন্টে পর্যাপ্ত ব্যালেন্স নেই! দয়া করে Add Balance করুন।");
                     confirmBtn.disabled = false;
                     closeJoinModal();
                     switchTab('addBalance');
@@ -1096,7 +1070,6 @@
             let worker = null;
 
             try {
-                // ১. ডুপ্লিকেট TrxID চেক
                 const qCheck = query(collection(db, "addBalanceRequests"), where("trxId", "==", trxIdInput), where("status", "==", "Approved"));
                 const checkSnap = await getDocs(qCheck);
                 if(!checkSnap.empty) {
@@ -1106,7 +1079,6 @@
                     return;
                 }
 
-                // ২. ৫ সেকেন্ড কাউন্টডাউন
                 let countdown = 5;
                 submitBtn.innerText = `Checking Screenshot (${countdown}s)...`;
                 
@@ -1124,14 +1096,12 @@
 
                 submitBtn.innerText = "Scanning Image...";
 
-                // ৩. Tesseract OCR রিড ও ওয়ার্কার হ্যান্ডলিং
                 worker = await Tesseract.createWorker('eng');
                 const ret = await worker.recognize(imageInput);
 
                 const extractedText = ret.data.text.toLowerCase().replace(/[\s\-_]/g, '');
                 const cleanTrxInput = trxIdInput.toLowerCase().replace(/[\s\-_]/g, '');
 
-                // ফ্লেক্সিবল ম্যাচিং (O এবং 0 এর ভুল এড়ানোর জন্য)
                 const isTrxFound = extractedText.includes(cleanTrxInput) || 
                                    extractedText.includes(cleanTrxInput.replace(/o/g, '0')) ||
                                    extractedText.includes(cleanTrxInput.replace(/0/g, 'o'));
@@ -1145,14 +1115,12 @@
                     return;
                 }
 
-                // ৪. ব্যালেন্স আপডেট করা
                 const userRef = doc(db, "users", auth.currentUser.uid);
                 const userSnap = await getDoc(userRef);
                 let currentBal = userSnap.exists() ? Number(userSnap.data().balance || 0) : 0;
 
                 await updateDoc(userRef, { balance: currentBal + amountInput });
 
-                // ৫. রিকুয়েস্ট সফল হিসেবে সংরক্ষণ
                 await addDoc(collection(db, "addBalanceRequests"), {
                     userId: auth.currentUser.uid, 
                     email: auth.currentUser.email,
@@ -1162,7 +1130,7 @@
                     timestamp: new Date()
                 });
 
-                alert(`সফল! স্ক্রিনশট ভেরিফাই হয়েছে এবং আপনার অ্যাকাউন্টে ৳${amountInput} যোগ করা হয়েছে।`);
+                alert(`সফল! স্ক্রিনশট ভেরিফাই হয়েছে এবং আপনার মেইন অ্যাকাউন্টে ৳${amountInput} যোগ করা হয়েছে।`);
                 document.getElementById('bkashTrxID').value = ""; 
                 document.getElementById('addAmount').value = "";
                 document.getElementById('bkashScreenshot').value = "";
@@ -1172,7 +1140,7 @@
                 alert("Error: " + e.message); 
             } finally {
                 if(worker) {
-                    await worker.terminate(); // মেমোরি ফ্রী করা যাতে পরবর্তীতে বারবার কাজ করে
+                    await worker.terminate();
                 }
                 submitBtn.innerText = "Submit Request";
                 submitBtn.disabled = false;
@@ -1196,11 +1164,11 @@
                     return;
                 }
 
-                const currentBal = Number(userSnap.data().balance || 0);
+                const currentWinBal = Number(userSnap.data().winBalance || 0);
 
-                if(currentBal < amount) { alert("আপনার পর্যাপ্ত ব্যালেন্স নেই।"); return; }
+                if(currentWinBal < amount) { alert("আপনার Win Balance এ পর্যাপ্ত পরিমাণ টাকা নেই! উইথড্র করতে শুধুমাত্র Win Balance এর টাকা ব্যবহার করা যাবে।"); return; }
 
-                await updateDoc(userRef, { balance: currentBal - amount });
+                await updateDoc(userRef, { winBalance: currentWinBal - amount });
 
                 await addDoc(collection(db, "withdrawRequests"), {
                     userId: auth.currentUser.uid, 
@@ -1211,7 +1179,7 @@
                     timestamp: new Date()
                 });
 
-                alert("উইথড্র রিকুয়েষ্ট সফল হয়েছে এবং ব্যালেন্স কেটে নেওয়া হয়েছে।");
+                alert("উইথড্র রিকুয়েষ্ট সফল হয়েছে এবং Win Balance থেকে টাকা কেটে নেওয়া হয়েছে।");
                 document.getElementById('withdrawNumber').value = ""; 
                 document.getElementById('withdrawAmount').value = "";
                 loadUserHistory();
@@ -1237,20 +1205,16 @@
         document.getElementById('updatePasswordBtn').onclick = updateUserPassword;
         document.getElementById('closeProfileModal').onclick = closeProfileModal;
 
-        document.getElementById('sendWhatsAppMsgBtn').onclick = sendWhatsAppMessage;
-
         document.getElementById('menuMatch').onclick = () => { switchTab('matchSection'); toggleDrawer(); };
         document.getElementById('menuMyMatch').onclick = () => { switchTab('myMatchSection'); toggleDrawer(); };
         document.getElementById('menuAddBal').onclick = () => { switchTab('addBalance'); toggleDrawer(); };
         document.getElementById('menuWithdraw').onclick = () => { switchTab('withdraw'); toggleDrawer(); };
         document.getElementById('menuGift').onclick = () => { switchTab('giftCodeSection'); toggleDrawer(); };
-        document.getElementById('menuSupportMail').onclick = () => { switchTab('supportMailSection'); toggleDrawer(); };
         
         document.getElementById('menuAdmin').onclick = () => { window.location.href = 'admin.html'; };
 
         document.getElementById('navHome').onclick = () => switchTab('matchSection');
         document.getElementById('navMyMatch').onclick = () => switchTab('myMatchSection');
-        document.getElementById('navSupport').onclick = () => switchTab('supportMailSection');
         document.getElementById('navProfile').onclick = () => openProfileModal();
     </script>
 </body>
