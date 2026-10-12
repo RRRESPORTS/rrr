@@ -47,17 +47,21 @@
         
         .admin-btn { width: 100%; padding: 10px; background: var(--neon-green); color: #000; border: none; font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 10px; }
         
-        .list-container { max-height: 400px; overflow-y: auto; margin-top: 10px; padding-right: 5px; }
+        .list-container { max-height: 450px; overflow-y: auto; margin-top: 10px; padding-right: 5px; }
         
         .room-item-box { background: #161e2e; border: 1px solid #374151; border-radius: 8px; padding: 15px; margin-bottom: 12px; border-left: 4px solid var(--neon-cyan); }
         .room-item-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
         .room-grid-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
         .room-actions { display: flex; gap: 8px; }
 
-        .list-item { background: #1f2937; padding: 12px; border-radius: 6px; margin-bottom: 10px; font-size: 13px; border-left: 3px solid var(--neon-cyan); display: flex; justify-content: space-between; align-items: center; }
-        .btn-group { display: flex; gap: 5px; }
-        .btn-approve { background: var(--neon-green); border: none; padding: 6px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; color: #000; }
-        .btn-fail { background: var(--neon-pink); color: #fff; border: none; padding: 6px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; }
+        /* Unique Withdraw Request Card Styling */
+        .withdraw-card-unique { background: linear-gradient(135deg, #161e2e, #0d121f); border: 1px solid rgba(0,243,255,0.3); border-radius: 10px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        .withdraw-card-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 8px; margin-bottom: 10px; }
+        .withdraw-info-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; font-size: 13px; margin-bottom: 12px; color: var(--text-muted); }
+        .withdraw-info-grid span strong { color: #fff; }
+        .btn-group { display: flex; gap: 8px; }
+        .btn-approve { background: var(--neon-green); border: none; padding: 8px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; color: #000; flex: 1; }
+        .btn-fail { background: var(--neon-pink); color: #fff; border: none; padding: 8px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; flex: 1; }
     </style>
 </head>
 <body>
@@ -103,12 +107,6 @@
                 <p>২৪ ঘণ্টা রিকাব সাইকেলের রিম্যাচ লিস্ট ম্যানেজ করুন</p>
             </div>
 
-            <div class="dash-card" onclick="openCardSection('cardAddBalance')">
-                <span class="card-badge" id="badgeAddBal">0</span>
-                <h3>Add Balance Request</h3>
-                <p>টাকা ডিপোজিট রিকুয়েষ্ট চেক ও এপ্রুভ করুন</p>
-            </div>
-
             <div class="dash-card" onclick="openCardSection('cardWithdraw')">
                 <span class="card-badge" id="badgeWithdraw">0</span>
                 <h3>Withdraw Request</h3>
@@ -117,17 +115,12 @@
 
             <div class="dash-card" onclick="openCardSection('cardUserBalance')">
                 <h3>Add User Balance</h3>
-                <p>ইউজারের UID দিয়ে ব্যালেন্স যোগ বা কাটুন</p>
+                <p>ইউজারের UID দিয়ে Main ও Win ব্যালেন্স আপডেট করুন</p>
             </div>
 
             <div class="dash-card" onclick="openCardSection('cardSearchUser')">
                 <h3>Search User & Block/Unblock</h3>
                 <p>ইউজার সার্চ করুন এবং ব্লক/আনব্লক করুন</p>
-            </div>
-
-            <div class="dash-card" style="border-color: var(--neon-cyan);" onclick="openCardSection('cardSupportMails')">
-                <h3>Support Mails / Messages</h3>
-                <p>ইউজারদের পাঠানো সাপোর্ট মেইল বা মেসেজগুলো দেখুন</p>
             </div>
         </div>
 
@@ -174,7 +167,7 @@
                 <button class="back-btn" onclick="goBackHome()">← Back</button>
             </div>
 
-            <!-- Categories Grid (User Panel Style) -->
+            <!-- Categories Grid -->
             <div id="adminCategoryCardsContainer" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px;">
                 <div onclick="filterAdminMatchesByCategory('BR MATCH')" style="background: linear-gradient(135deg, #1f1115, #0d121f); border: 2px solid var(--neon-pink); border-radius: 10px; padding: 15px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;">
                     <div>
@@ -217,10 +210,7 @@
                 </div>
             </div>
 
-            <!-- Back to Categories Button -->
             <button id="backToAdminCategoriesBtn" style="display: none; background: var(--neon-cyan); color: #000; border: none; padding: 6px 14px; border-radius: 6px; font-weight: bold; margin-bottom: 12px; cursor: pointer;" onclick="showAdminCategoriesView()">← Back to Categories</button>
-
-            <!-- Match Room Input List Container -->
             <div class="list-container" id="roomControlList" style="display: none;"></div>
         </div>
 
@@ -252,12 +242,10 @@
             <input type="text" id="uniName" class="form-control" placeholder="Match Name">
             <input type="number" id="uniFee" class="form-control" placeholder="Entry Fee (৳)">
 
-            <!-- Normal & Repeat Prize Field -->
             <div id="uniNormalPrizeBox">
                 <input type="text" id="uniFirstPrize" class="form-control" placeholder="Total Prize (e.g. ৳500)">
             </div>
 
-            <!-- Per Kill Specific Fields -->
             <div id="uniPerKillFieldsBox" style="display: none;">
                 <input type="text" id="uniPrizePool" class="form-control" placeholder="Total Prize Pool (e.g. ৳1000)">
                 <input type="number" id="uniPerKillAmount" class="form-control" placeholder="Per Kill Amount (৳)">
@@ -270,21 +258,12 @@
             <button class="admin-btn" style="background: var(--neon-orange); color: #000;" onclick="submitUniversalMatch()">Create Match</button>
         </div>
 
-        <!-- Repeat Match List Section -->
         <div id="cardRepeatMatchList" class="admin-section">
             <div class="section-header">
                 <h3>Repeat Matches List</h3>
                 <button class="back-btn" onclick="goBackHome()">← Back</button>
             </div>
             <div class="list-container" id="repeatMatchListContainer"><p style="color: var(--text-muted); text-align: center;">Loading repeat matches...</p></div>
-        </div>
-
-        <div id="cardAddBalance" class="admin-section">
-            <div class="section-header">
-                <h3>Add Balance Request</h3>
-                <button class="back-btn" onclick="goBackHome()">← Back</button>
-            </div>
-            <div class="list-container" id="addBalanceRequestsList"><p style="color: var(--text-muted); text-align: center;">Loading...</p></div>
         </div>
 
         <div id="cardWithdraw" class="admin-section">
@@ -301,8 +280,8 @@
                 <button class="back-btn" onclick="goBackHome()">← Back</button>
             </div>
             <input type="text" id="targetUserUID" class="form-control" placeholder="Enter User Game UID">
-            <input type="number" id="bonusAmount" class="form-control" placeholder="Amount (৳) [Use minus for cut]">
-            <button class="admin-btn" onclick="modifyUserBalance()">Update Balance</button>
+            <input type="number" id="bonusAmount" class="form-control" placeholder="Amount (৳) [Use minus for cut e.g. +500 or -500]">
+            <button class="admin-btn" onclick="modifyUserBalance()">Update Balance (Main & Win)</button>
         </div>
 
         <div id="cardSearchUser" class="admin-section">
@@ -313,14 +292,6 @@
             <input type="text" id="searchUidInput" class="form-control" placeholder="Enter Game UID">
             <button class="admin-btn" onclick="searchUserByUID()">Search User</button>
             <div id="searchResultBox" style="margin-top: 10px; font-size: 13px; color: var(--text-muted);"></div>
-        </div>
-
-        <div id="cardSupportMails" class="admin-section">
-            <div class="section-header">
-                <h3>Support Mails / Messages</h3>
-                <button class="back-btn" onclick="goBackHome()">← Back</button>
-            </div>
-            <div class="list-container" id="supportMailsList"><p style="color: var(--text-muted); text-align: center;">Loading support mails...</p></div>
         </div>
     </div>
 
@@ -541,11 +512,11 @@
                     const userRef = doc(db, "users", userId);
                     const userSnap = await getDoc(userRef);
                     if(userSnap.exists()) {
-                        let currentBal = Number(userSnap.data().balance || 0);
-                        await updateDoc(userRef, { balance: currentBal + Number(amount) });
+                        let currentWinBal = Number(userSnap.data().winBalance || 0);
+                        await updateDoc(userRef, { winBalance: currentWinBal + Number(amount) });
                     }
                     await updateDoc(reqRef, { status: 'Fail' });
-                    alert("উইথড্র ফেইল ও ব্যালেন্স রিফান্ড করা হয়েছে।");
+                    alert("উইথড্র ফেইল ও উইন ব্যালেন্স রিফান্ড করা হয়েছে।");
                 }
                 loadAdminData();
             } catch(e) { alert("Error: " + e.message); }
@@ -562,9 +533,16 @@
                 if(snap.empty) { alert("এই UID-এর কোনো ইউজার পাওয়া যায়নি!"); return; }
 
                 let userDocRef = snap.docs[0].ref;
-                let currentBal = Number(snap.docs[0].data().balance || 0);
-                await updateDoc(userDocRef, { balance: currentBal + amount });
-                alert(`সফলভাবে ব্যালেন্স আপডেট করা হয়েছে! নতুন ব্যালেন্স: ৳${currentBal + amount}`);
+                let userData = snap.docs[0].data();
+                let currentMain = Number(userData.balance || 0);
+                let currentWin = Number(userData.winBalance || 0);
+
+                await updateDoc(userDocRef, { 
+                    balance: currentMain + amount,
+                    winBalance: currentWin + amount
+                });
+
+                alert(`সফলভাবে Main ও Win ব্যালেন্স আপডেট করা হয়েছে!\nনতুন Main Balance: ৳${currentMain + amount}\nনতুন Win Balance: ৳${currentWin + amount}`);
                 document.getElementById("targetUserUID").value = "";
                 document.getElementById("bonusAmount").value = "";
             } catch(e) { alert("Error: " + e.message); }
@@ -592,7 +570,8 @@
                             <div style="background: #1f2937; padding: 10px; border-radius: 6px; border-left: 3px solid var(--neon-green); margin-top: 5px;">
                                 <strong style="color: var(--neon-cyan);">Name:</strong> ${userData.playerName || 'N/A'}<br>
                                 <strong style="color: var(--neon-cyan);">UID:</strong> ${userData.playerUID}<br>
-                                <strong style="color: var(--neon-cyan);">Balance:</strong> ৳${userData.balance || 0}<br>
+                                <strong style="color: var(--neon-cyan);">Main Balance:</strong> ৳${userData.balance || 0}<br>
+                                <strong style="color: var(--neon-cyan);">Win Balance:</strong> ৳${userData.winBalance || 0}<br>
                                 <strong style="color: var(--neon-cyan);">Status:</strong> ${isBlocked ? '<span style="color:red">Blocked</span>' : '<span style="color:green">Active</span>'}<br>
                                 <button class="admin-btn" style="background: ${isBlocked ? 'var(--neon-green)' : 'var(--neon-pink)'}; margin-top:8px; padding:6px;" onclick="toggleBlockUser('${docId}', ${isBlocked})">
                                     ${isBlocked ? 'Unblock User' : 'Block User'}
@@ -665,31 +644,6 @@
             document.getElementById('admin_count_ltw').innerText = `${counts["LOST TO WIN"]} Matches Found`;
             document.getElementById('admin_count_ludo').innerText = `${counts["LUDO MATCH"]} Matches Found`;
 
-            let pendingAddBalCount = 0;
-            const addBalContainer = document.getElementById("addBalanceRequestsList");
-            const snapBal = await getDocs(collection(db, "addBalanceRequests"));
-            addBalContainer.innerHTML = `<p style="color:var(--text-muted); text-align:center;" id="noAddBalMsg">কোনো রিকুয়েষ্ট নেই (অটোমেটিক সিস্টেম চালু আছে)।</p>`;
-            
-            snapBal.forEach(d => {
-                const data = d.data();
-                if(data.status === 'Pending') {
-                    pendingAddBalCount++;
-                    if(pendingAddBalCount === 1) addBalContainer.innerHTML = "";
-                    addBalContainer.innerHTML += `
-                        <div class="list-item">
-                            <div>Trx: ${data.trxId} | ৳${data.amount}</div>
-                        </div>`;
-                }
-            });
-
-            const badgeAddBal = document.getElementById("badgeAddBal");
-            if(pendingAddBalCount > 0) {
-                badgeAddBal.innerText = pendingAddBalCount;
-                badgeAddBal.style.display = "block";
-            } else {
-                badgeAddBal.style.display = "none";
-            }
-
             let pendingWithdrawCount = 0;
             const withdrawContainer = document.getElementById("withdrawRequestsList");
             const snapWith = await getDocs(collection(db, "withdrawRequests"));
@@ -702,8 +656,8 @@
                     if(pendingWithdrawCount === 1) withdrawContainer.innerHTML = "";
                     
                     let userUID = "N/A";
-                    let balanceBefore = "N/A";
-                    let balanceAfter = "N/A";
+                    let winBalBefore = "N/A";
+                    let winBalAfter = "N/A";
 
                     try {
                         if(data.userId) {
@@ -711,29 +665,30 @@
                             if(userSnap.exists()) {
                                 const userData = userSnap.data();
                                 userUID = userData.playerUID || "N/A";
-                                const currentBal = Number(userData.balance || 0);
+                                const currentWinBal = Number(userData.winBalance || 0);
                                 const reqAmount = Number(data.amount || 0);
                                 
-                                balanceBefore = currentBal + reqAmount;
-                                balanceAfter = currentBal;
+                                winBalBefore = currentWinBal + reqAmount;
+                                winBalAfter = currentWinBal;
                             }
                         }
                     } catch(err) {}
 
                     withdrawContainer.innerHTML += `
-                        <div class="list-item" style="flex-direction: column; align-items: flex-start; gap: 8px;">
-                            <div style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
-                                <div>
-                                    <strong style="color: var(--neon-cyan);">Number:</strong> <span style="color: #fff;">${data.number}</span><br>
-                                    <strong style="color: var(--neon-cyan);">Amount:</strong> <span style="color: var(--neon-orange);">৳${data.amount}</span><br>
-                                    <strong style="color: var(--neon-cyan);">UID:</strong> <span style="color: var(--neon-green);">${userUID}</span><br>
-                                    <strong style="color: var(--neon-cyan);">Before Bal:</strong> <span style="color: #ffaa00;">৳${balanceBefore}</span> | 
-                                    <strong style="color: var(--neon-cyan);">After Bal:</strong> <span style="color: #00ffcc;">৳${balanceAfter}</span>
-                                </div>
-                                <div class="btn-group">
-                                    <button class="btn-approve" onclick="processWithdraw('${d.id}', '${data.userId}', ${data.amount}, 'Approved')">Approve</button>
-                                    <button class="btn-fail" onclick="processWithdraw('${d.id}', '${data.userId}', ${data.amount}, 'Fail')">Fail</button>
-                                </div>
+                        <div class="withdraw-card-unique">
+                            <div class="withdraw-card-header">
+                                <span style="color: var(--neon-cyan); font-weight: bold; font-size: 14px;">bKash: ${data.number}</span>
+                                <span style="color: var(--neon-orange); font-weight: bold; font-size: 16px;">৳${data.amount}</span>
+                            </div>
+                            <div class="withdraw-info-grid">
+                                <span>Game UID: <strong>${userUID}</strong></span>
+                                <span>Win Bal Before: <strong style="color: #ffaa00;">৳${winBalBefore}</strong></span>
+                                <span>Win Bal After: <strong style="color: #00ffcc;">৳${winBalAfter}</strong></span>
+                                <span>Status: <strong style="color: var(--neon-cyan);">Pending</strong></span>
+                            </div>
+                            <div class="btn-group">
+                                <button class="btn-approve" onclick="processWithdraw('${d.id}', '${data.userId}', ${data.amount}, 'Approved')">Approve</button>
+                                <button class="btn-fail" onclick="processWithdraw('${d.id}', '${data.userId}', ${data.amount}, 'Fail')">Fail</button>
                             </div>
                         </div>`;
                 }
@@ -746,18 +701,6 @@
             } else {
                 badgeWithdraw.style.display = "none";
             }
-
-            const supportListContainer = document.getElementById("supportMailsList");
-            const snapSupport = await getDocs(collection(db, "supportMails"));
-            supportListContainer.innerHTML = snapSupport.empty ? `<p style="color:var(--text-muted); text-align:center;">কোনো সাপোর্ট মেইল বা মেসেজ নেই।</p>` : "";
-            supportListContainer.forEach(d => {
-                const mail = d.data();
-                supportListContainer.innerHTML += `
-                    <div class="room-item-box" style="border-left-color: var(--neon-pink);">
-                        <strong style="color: var(--neon-cyan);">${mail.name}</strong> (${mail.email})<br>
-                        <p style="font-size: 13px; color: #fff; margin-top: 5px;">${mail.message}</p>
-                    </div>`;
-            });
         }
     </script>
 </body>
